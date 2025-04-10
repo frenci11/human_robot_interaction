@@ -3,4 +3,4 @@ DCX22L_113_1_18V;
 
 % sisotool(motor_current);
 
-C_current = 10000 * (1 + 0.01*s) * 1/s;
+C_current = 200000 * (1 + 0.05*s)/s;

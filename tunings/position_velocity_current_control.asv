@@ -2,7 +2,6 @@
 DCX22L_113_1_18V;
 
 C_current = 200000 * (1 + 0.05*s)/s;
-% C_current = 4000 * (1 + 0.2*s)/s;
 
 motor_velocity = feedback(C_current * motor_current, 1) * K * Me;
 
@@ -18,29 +17,12 @@ C_position = 1000*(1 + 0.1*s)/s;
 
 complete_motor_system = feedback(C_position * motor_position, 1);
 
-%% feasable position-velocity-current control
-
-
 
 %% automatic tuning session
 
-C_current_auto = tunablePID('C_current_auto','pi');
-C_current_auto.Kp.Minimum = 0;
-C_current_auto.Ki.Minimum = 0;
-C_current_auto.Kp.Maximum = 100;
-C_current_auto.Ki.Maximum = 20;
-
-C_velocity_auto = tunablePID('C_velocity_auto','pi');
-C_velocity_auto.Kp.Minimum = 0;
-C_velocity_auto.Ki.Minimum = 0;
-C_velocity_auto.Kp.Maximum = 50;
-C_velocity_auto.Ki.Maximum = 10;
-
-C_position_auto = tunablePID('C_position_auto','pd');
-C_position_auto.Kp.Minimum = 0;
-C_position_auto.Kd.Minimum = 0;
-C_position_auto.Kp.Maximum = 20;
-C_position_auto.Kd.Maximum = 5;
+C_current_auto = tunablePID('C_current_autotuned','pi');
+C_velocity_auto = tunablePID('C_velocity_autotuned','pi');
+C_position_auto = tunablePID('C_position_autotuned','pd');
 
 in_current = AnalysisPoint('inCurrent');
 out_C_current = AnalysisPoint('outCCurrent');
@@ -51,11 +33,11 @@ out_velocity = AnalysisPoint('outVelocity');
 
 in_torque_disturbance = AnalysisPoint('in_torque_disturbance');
 
-out_C_position=  AnalysisPoint('outCPosition');
+out_C_velocity =  AnalysisPoint('outCVe');
 
 current_subsystem = in_current * feedback(C_current_auto * out_C_current * motor_current, 1) * out_current;
-velocity_subsystem = in_velocity * feedback(C_velocity_auto * out_C_velocity *  current_subsystem * K * in_torque_disturbance * Me, 1) * out_velocity;
-position_system = feedback(C_position_auto * out_C_position* velocity_subsystem * 1/s, 1);
+velocity_subsystem = in_velocity * feedback(C_velocity_auto * current_subsystem * K * in_torque_disturbance * Me, 1) * out_velocity;
+position_system = feedback(C_position_auto * velocity_subsystem * 1/s, 1);
 
 controlSystemTuner(position_system);
 

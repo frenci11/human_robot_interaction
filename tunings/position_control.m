@@ -9,4 +9,4 @@ DCX22L_113_1_18V;
 % better disturbance rejection 
 % C_no_integrator_better_du_rejection = 0.43396*((s+60)^2)*(s^2 + 160*s + 6401) / (s+1);
 
-C_position_integrator =   0.075865 *(s+3.859) * (s+50.01) * 1/s;
+C_position_integrator =  0.2302*((s+40)^2)*(s+54.3) * 1/s;

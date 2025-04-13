@@ -12,7 +12,7 @@ Im = 0.0104;
 Fm = 0.0068; 
 Kv = 1/(2*pi*135/60);
 Ra = 0.68;
-La = 0.0779;
+La = 0.0000779;
 
 %i_max = 3.0 A -> max 1.5 dB for unitary input
 %v_max= 20 V- > max 10 dB for unitary input
@@ -31,22 +31,12 @@ save(fullfile(common_files, 'Me.mat'), "Me");
 save(fullfile(common_files, 'Kt.mat'), "Kt");
 
 %transfer function from v to i
-plant = ( El / (1+(El*Me*Kt^2)) );
-%loading the same transfer function computed with linsys toolbox
-load(fullfile(common_files,"transfer_v_to_i.mat"));
-
+plant = minreal( El / (1+(El*Me*Kt^2)) );
 
 disp('plant poles');
-disp(pole(plant));
+disp(vpa(pole(plant),3));
 disp('plant zeros');
-disp(zero(plant));
-clear plant
-%we can see that the 2 transfer function are the same,
-%so the linsys toolbox devs did a great job
-disp('transfer_v_to_i poles');
-disp(pole(transfer_v_to_i));
-disp('transfer_v_to_i zeros');
-disp(zero(transfer_v_to_i));
+disp(vpa(zero(plant),3));
 
 
 % figure(1)
@@ -55,18 +45,18 @@ disp(zero(transfer_v_to_i));
 % grid on
 
 %controller computed with sisotool
-i_controller=load("current_controller_tf.mat");
-i_controller=i_controller.i_controller;
+i_controller=load(fullfile(common_files,"current_controller_tf.mat"));
+i_controller=i_controller.C;
 
-feedback=(i_controller*transfer_v_to_i)/(1+i_controller*transfer_v_to_i);
+feedback=minreal((i_controller*plant)/(1+i_controller*plant));
 
 
 disp('closed loop poles');
-disp(pole(feedback))
+disp(vpa(pole(feedback),5))
 disp('closed loop zeros');
-disp(zero(feedback))
+disp(vpa(zero(feedback),5))
 
-%sisotool(transfer_v_to_i,i_controller);
+%sisotool(plant,i_controller);
 
 %for simulink
 

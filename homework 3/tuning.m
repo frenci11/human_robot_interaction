@@ -18,4 +18,4 @@ C_position = 300*(1 + 0.2*s)/s;
 
 complete_motor_system = feedback(C_position * motor_position, 1);
 
-enable_saturators = true;
+enable_saturators = false;

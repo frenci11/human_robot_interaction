@@ -42,3 +42,30 @@ theta_controller=load(fullfile(common_files,"theta_controller.mat"));
 theta_controller=theta_controller.C;
 
 %sisotool(plant,1)
+
+
+%% trajectory generation
+syms t
+
+amplitude=1.5;
+frequency=10;
+phase=0;
+
+theta=amplitude*sin(frequency*t+phase);
+d_theta=diff(theta,t);
+dd_theta=diff(d_theta,t);
+
+theta=matlabFunction(theta,Vars=t);
+d_theta=matlabFunction(d_theta,Vars=t);
+dd_theta=matlabFunction(dd_theta,Vars=t);
+
+
+
+
+
+
+
+
+
+
+

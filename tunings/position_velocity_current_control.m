@@ -1,34 +1,33 @@
 % homework 3 - position-velocity-current control
 DCX22L_113_1_18V;
 
-C_current = 200000 * (1 + 0.05*s)/s;
+C_current = 5000 * (1 + 0.002*s)/s;
 % C_current = 4000 * (1 + 0.2*s)/s;
 
 motor_velocity = feedback(C_current * motor_current, 1) * K * Me;
 
 % sisotool(motor_velocity);
 
-C_velocity =  30000 * ( 0.002*s+1 )/s;
+C_velocity =  1000 * (0.02*s + 1)/s;
 
 motor_position = feedback(C_velocity * motor_velocity, 1) * 1/s;
 
 % sisotool(motor_position);
 
-C_position = 1000*(1 + 0.1*s)/s;
+C_position = 300*(1 + 0.2*s)/s;
+% C_position = 100*(1 + 1*s)/s;
 
 complete_motor_system = feedback(C_position * motor_position, 1);
-
-%% feasable position-velocity-current control
 
 
 
 %% automatic tuning session
 
-C_current_auto = tunablePID('C_current_auto','pi');
-C_current_auto.Kp.Minimum = 0;
-C_current_auto.Ki.Minimum = 0;
-C_current_auto.Kp.Maximum = 100;
-C_current_auto.Ki.Maximum = 20;
+C_current_auto = C_current; %tunablePID('C_current_auto','pi');
+% C_current_auto.Kp.Minimum = 0;
+% C_current_auto.Ki.Minimum = 0;
+% C_current_auto.Kp.Maximum = 100;
+% C_current_auto.Ki.Maximum = 20;
 
 C_velocity_auto = tunablePID('C_velocity_auto','pi');
 C_velocity_auto.Kp.Minimum = 0;

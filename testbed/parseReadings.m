@@ -1,4 +1,3 @@
-clear all;
 close all;
 clc;
 
@@ -26,9 +25,34 @@ PID_sweep.Reference  = timeseries(PID_sweep_csv.Output,PID_sweep_csv.t);
 
 PID_sweep.tf_est = struct('mag_db', 20*log10(abs(PID_sweep_tf_est)), 'phase_deg', angle(PID_sweep_tf_est)*180/pi, 'f', f);
 
+%% load sim data
+
+load simout.mat;
+
+sim_FF_sweep = struct();
+
+sim_FF_sweep.tauM = out.logsout.getElement('tauM_ff').Values;
+sim_FF_sweep.thetaM = out.logsout.getElement('thetaM_ff').Values;
+sim_FF_sweep.Reference  =  out.logsout.getElement('Reference').Values;
+
+[sim_FF_sweep_tf_est, sim_f] = tfestimate(sim_FF_sweep.Reference.Data,sim_FF_sweep.thetaM.Data,512,[],1:0.1:20,2000);
+
+sim_FF_sweep.tf_est = struct('mag_db', 20*log10(abs(sim_FF_sweep_tf_est)), 'phase_deg', angle(sim_FF_sweep_tf_est)*180/pi,'f', f);
+
+sim_PID_sweep = struct();
+
+sim_PID_sweep.tauM = out.logsout.getElement('tauM_PID').Values;
+sim_PID_sweep.thetaM = out.logsout.getElement('thetaM_PID').Values;
+sim_PID_sweep.Reference  = out.logsout.getElement('Reference').Values;
+
+[sim_PID_sweep_tf_est, sim_f] = tfestimate(sim_PID_sweep.Reference.Data,sim_PID_sweep.thetaM.Data,512,[],1:0.1:20,2000);
+
+sim_PID_sweep.tf_est = struct('mag_db', 20*log10(abs(sim_PID_sweep_tf_est)), 'phase_deg', angle(sim_PID_sweep_tf_est)*180/pi, 'f', f);
+
+
 %% plots
 
-figure();
+figure("Name", 'Test bed');
 subplot(231);
 title('PID controller');
 hold on;
@@ -82,6 +106,68 @@ title('PID controller - freq. response');
 hold on;
 grid on;
 plot(f, FF_sweep.tf_est.phase_deg);
+yline(-180, 'r--', '-180 deg'); 
+xlabel('freq. (Hz)');
+ylabel('phase (deg)');
+xlim([1 20]);
+
+%%
+
+figure("Name", 'Simulation');
+
+subplot(231);
+title('PID controller');
+hold on;
+grid on;
+plot(sim_PID_sweep.Reference);
+plot(sim_PID_sweep.thetaM);
+xlabel('time (t)');
+ylabel('amplitude (rad)');
+
+subplot(232);
+title('PID controller - freq. response');
+hold on;
+grid on;
+plot(sim_f, sim_PID_sweep.tf_est.mag_db);
+yline(-3, 'r--', '-3 dB'); 
+xlabel('freq. (Hz)');
+ylabel('magnitude (dB)');
+xlim([1 20]);
+
+subplot(233);
+title('PID controller - freq. response');
+hold on;
+grid on;
+plot(sim_f, sim_PID_sweep.tf_est.phase_deg);
+yline(-180, 'r--', '-180 deg'); 
+xlabel('freq. (Hz)');
+ylabel('phase (deg)');
+xlim([1 20]);
+
+subplot(234);
+title('FF controller');
+hold on;
+grid on;
+plot(sim_FF_sweep.Reference);
+plot(sim_FF_sweep.thetaM);
+xlabel('time (t)');
+ylabel('amplitude (rad)');
+
+subplot(235);
+title('FF controller - freq. response');
+hold on;
+grid on;
+plot(sim_f, sim_FF_sweep.tf_est.mag_db);
+yline(-3, 'r--', '-3 dB'); 
+xlabel('freq. (Hz)');
+ylabel('magnitude (dB)');
+xlim([1 20]);
+
+subplot(236);
+title('PID controller - freq. response');
+hold on;
+grid on;
+plot(sim_f, sim_FF_sweep.tf_est.phase_deg);
 yline(-180, 'r--', '-180 deg'); 
 xlabel('freq. (Hz)');
 ylabel('phase (deg)');

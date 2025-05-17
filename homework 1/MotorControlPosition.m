@@ -34,7 +34,7 @@ Me =  Kt / (s*Im + Fm);
 
 
 %transfer function from v to theta
-plant = 1/s*( (El*Me) / (1+(El*Me*Kt)) )
+plant = ((El*Me) / (1+(El*Me*Kt)))*1/s
 
 save('motor_plant_tf.mat','plant');
 

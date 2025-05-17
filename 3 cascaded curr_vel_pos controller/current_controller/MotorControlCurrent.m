@@ -29,6 +29,9 @@ Me =  1 / (s*Im + Fm);
 save(fullfile(common_files, 'El.mat'), "El");
 save(fullfile(common_files, 'Me.mat'), "Me");
 save(fullfile(common_files, 'Kt.mat'), "Kt");
+save(fullfile(common_files,'Im_constant.mat'),"Im");
+save(fullfile(common_files,'Fm_constant.mat'),"Fm");
+
 
 %transfer function from v to i
 plant = minreal( El / (1+(El*Me*Kt^2)) );

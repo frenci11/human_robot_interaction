@@ -11,6 +11,14 @@ s = tf('s');
 
 load(fullfile(common_files,"El.mat"));
 load(fullfile(common_files,"Me.mat"));
+load(fullfile(common_files,"Im_constant.mat"));
+load(fullfile(common_files,"Fm_constant.mat"));
+
+
+Me;
+
+inv_Me=1/Me*((2*pi*100)/(s+2*pi*100));
+
 load(fullfile(common_files,"Kt.mat"));
 %loading previous controllers to cascade them to plant
 i_controller=load(fullfile(common_files,"current_controller_tf.mat"));
@@ -47,8 +55,8 @@ theta_controller=theta_controller.C;
 %% trajectory generation
 syms t
 
-amplitude=1.5;
-frequency=10;
+amplitude=0.8;
+frequency=2*pi*3;
 phase=0;
 
 theta=amplitude*sin(frequency*t+phase);

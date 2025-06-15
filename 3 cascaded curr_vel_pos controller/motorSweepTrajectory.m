@@ -4,7 +4,7 @@ syms t real;
 
 A = 0.1;
 f0 = 0;
-f1 = 20;
+f1 = 50;
 t1 = 20;
 
 sweep_traj = A * sin(2*pi*(f0 * t + (f1 - f0) * t^2 / (2 * t1)));

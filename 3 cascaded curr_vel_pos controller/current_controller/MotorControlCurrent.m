@@ -59,7 +59,7 @@ disp(vpa(pole(feedback),5))
 disp('closed loop zeros');
 disp(vpa(zero(feedback),5))
 
-%sisotool(plant,i_controller);
+sisotool(plant,i_controller);
 
 %for simulink
 

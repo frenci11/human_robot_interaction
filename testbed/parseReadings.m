@@ -2,8 +2,8 @@ close all;
 clc;
 
 % loads raw data from ForeCast csv exports
-FF_sweep_csv = readtable('./testbed/recordings/FF_sweep.csv');
-PID_sweep_csv = readtable('./testbed/recordings/PID_sweep.csv');
+FF_sweep_csv = readtable('./recordings/FF_sweep.csv');
+PID_sweep_csv = readtable('./recordings/PID_sweep.csv');
 
 FF_sweep = struct();
 
@@ -11,9 +11,9 @@ FF_sweep.tauM = timeseries(FF_sweep_csv.tauM,FF_sweep_csv.t);
 FF_sweep.thetaM = timeseries(FF_sweep_csv.thetaM,FF_sweep_csv.t);
 FF_sweep.Reference  = timeseries(FF_sweep_csv.Reference,FF_sweep_csv.t);
 
-[FF_sweep_tf_est, f] = tfestimate(FF_sweep.Reference.Data,FF_sweep.thetaM.Data,512,[],1:0.1:20,2000);
+%[FF_sweep_tf_est, f] = tfestimate(FF_sweep.Reference.Data,FF_sweep.thetaM.Data,512,[],1:0.1:20,2000);
 
-FF_sweep.tf_est = struct('mag_db', 20*log10(abs(FF_sweep_tf_est)), 'phase_deg', angle(FF_sweep_tf_est)*180/pi,'f', f);
+%FF_sweep.tf_est = struct('mag_db', 20*log10(abs(FF_sweep_tf_est)), 'phase_deg', angle(FF_sweep_tf_est)*180/pi,'f', f);
 
 PID_sweep = struct();
 
